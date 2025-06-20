@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title></title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+       
+    </head>
+        <style>
+        .basic{
+            width:200px;
+            height:100px;
+            text-align:center;
+            border:1px solid black;
+            margin-bottom: 10px;
+        }
+        .normal{
+            background-color: skyblue;
+
+        }
+        .happy{
+            background-color: rgba(255,255,0,0.644);
+        }
+        .sad{
+            background-color: gray;
+        }
+        .atguigu1{
+            background-color: yellowgreen;
+        }
+        .atguigu2{
+        font-size: 30px;
+        }
+        .atguigu3{
+            border-radius: 20px;
+        }
+        
+    </style>
+    <body>
+    
+ <div id="app">
+     <h2>count:{{count}}</h2>
+     <button @click="updateCount">更新</button>
+     <p>{{123}}</p>
+     <p>{{message.toUpperCase()}}</p>
+     <p>{{score<60?'未通过':'通过'}}</p>
+     <p v-if="score>=60" >欢迎</p>
+     <p v-else >----</p>
+     <h2 v-if="score>=60" style="color:green">欢迎你</h2>
+     <h3 v-else-if="score<50" style="color: red;">很遗憾</h3>
+     <h4 v-else style="color:yellow">没有通过 </h4>
+     <!-- 在初始化解析显示时，如果表达式的值为true，那么二者的内部处理相同；如果表达式的值为false，则内部处理完全不同 
+     v-if指令对应的模板标签结构不会被解析，也就不会产生对应的HTML标签结构；
+     而v-show指令则会解析模板标签结构，
+     生成HTML标签结构，只不过它会通过指定display为none的样式来隐藏标签结构 
+     表达式的值变为false，需要隐藏标签结构。v-if指令的标签直接被删除，
+     -->
+     <h2 v-show="score>=60" style="color:green">欢迎你</h2>
+     <h3 v-show="score<50" style="color: red;">很遗憾</h3>
+     <h4 v-show="score<60&score>50" style="color:yellow">没有通过 </h4>
+     <p>{{ resultText }}</p>
+     <p>方法实现：{{ getResultText() }}</p>
+     {{message}}
+     <button @click="reExam">增加分值</button>{{this.score}}
+
+     <p> 
+        姓：<input type="text" v-model="firstName">
+        名: <input type="text" v-model="lastName">
+     </p>
+     <p> 
+        姓名：<input type="text" v-model="fullNameSet">
+    </p>
+    标题：<input type="text" placeholder="输入内容同步到标题" v-model="title"><br>
+    问题：<span>{{question}}</span><br>
+   person.name:<input type="text" v-model='person.name'></input>
+   <h3>name:{{person.name}}</h3>
+   <h3>likes:{{person.likes}}</h3>
+   <button @click="updateP">更新人员信息</button>
+   <div class="basic" :class="classStr" @click="updataClass1">afd11</div>
+   <div class="basic" :class="classObj" @click="updataClass2">afdfd222</div>
+   <div class="basic" :class="classArr" @click="updataClass3">afdfd333</div>
+   <div class="basic" :style="styleStr" @click="updateStyle1">style11</div>
+   <div class="basic" :style="styleObj" @click="updateStyle2">style22</div>
+   <div class="basic" :style="styleArr" @click="updateStyle3">style33</div>
+   <h2>测试列表的增、删、改</h2>
+   <ul>
+    <li v-for="(p,index) in persons" :key="p.id" style="margin-top:5px;">
+        {{p.name}} -- {{p.age}}
+        -- <button @click="deleteItem(index)">删除</button>
+        -- <button @click="updateItem(index,{id:Date.now(),name:'小兰',age:12})">更新</button>
+    </li>
+   </ul>
+   <button @click="addFirst({id:Date.now(),name:'小明',age:10})">向第一位添加</button>
+   <button @click="addLast({id:Date.now(),name:'小红',age:11})">向最后一位添加</button>
+   <h2>人员列表</h2>
+   <input type="text" placeholder="请输入姓名" v-model="keyword">
+   <ul>
+    <li v-for="(p,index) of filterPerson" :key="index">
+        {{p.name}}-{{p.age}}-{{p.sex}}
+    </li>
+   </ul>
+   <button @click="sortType=2">年龄升序</button>
+   <button @click="sortType=1">年龄降序 </button>
+   <button @click="sortType=0">原降序 </button><br>
+   -----------------------------------------------<br>
+   <button @click="handlerClick1">
+    测试1
+   </button>
+   <button @click="handlerClick2('任意数据')">
+    测试2
+   </button>
+     <button @click="event=>handlerClick2('任意数据',event)">
+    测试3
+   </button>
+        <button @click="handlerClick3('任意数据',$event)">
+    测试4
+   </button>
+   <a href="http://www.baidu.com" @click.prevent="test1">去百度</a>
+   <div style="width: 200px;height:200px;background-color: yellow;" @click="test2">
+        outer
+        <div style="width: 100px;height: 100px;background-color: green;" @click.stop="test3">inner</div>
+   </div>
+   <button @click.once="test4">只相应一次点击</button>
+   <input type="text" @keyup="hint" />
+   <p>enter<input type="text" @keyup.enter="hint"></p>
+   <p> up<input type="text" @keyup.arrow-up="hint"></p>
+   <p> alt enter<input type="text" @keyup.alt.enter="hint"></p>
+   <p>  <input v-model="msg"></p>
+   <from @submit.prevent="confirm">
+        账号：<input type="text" v-model="userInfo.account"><br><br>
+        密码：<input type="password" v-model="userInfo.password"><br><br>
+        年龄：<input type="number" v-model="userInfo.age" ><br><br>
+        性别：
+        男<input type="radio" name="sex" v-model="userInfo.sex" value="male">
+        女<input type="radio" name="sex" v-model="userInfo.sex" value="female"> <br>
+        爱好：
+        学习<input type="checkbox" v-model="userInfo.hobby" value="study">
+        打游戏<input type="checkbox" v-model="userInfo.hobby" value="game">
+        旅行<input type="checkbox" v-model="userInfo.hobby" value="eat"><br>
+        所属校区
+        <select v-model="userInfo.city">
+            <option value="">请选择校区</option>
+            <option value="beijing">北京</option>
+            <option value="shanghai">上海</option>
+            <option value="shenzhen">深圳</option>
+            <option value="wuhan">武汉</option>
+        </select>
+        <br>
+        其他信息
+        <textarea v-model="userInfo.other"></textarea><br>
+        <input type="checkbox" v-model="userInfo.agree">阅 读 并 接 受<a href="http://www.baidu.com">《用户协议》</a></input>
+        <input type="submit" @click="confirm" value="提交" />
+    </from>
+    <div>预览：{{userInfo}}</div>
+</div>
+
+<script src="https://cdn.bootcdn.net/ajax/libs/vue/3.5.9/vue.global.js"></script>
+
+ <script>
+    //v-model.lazy  v-model.trim  v-model.number
+     const { createApp }=Vue
+    const vm= createApp({
+        data(){
+            return {
+                userInfo:{
+                    account:'',
+                    paddword:'',
+                    age:18,
+                    sex:'female',
+                    hobby:['study'],
+                    city:'beijing',
+                    other:'',
+                    agree:false
+                },
+                persons:[
+                    {id:'001',name:'张三',age:18,sex:'男'},
+                    {id:'002',name:'李四',age:19,sex:'女'},
+                    {id:'003',name:'王五',age:30,sex:'女'},
+                    {id:'004',name:'谢思萌',age:23,sex:'女'},
+
+                ],
+                keyword:'',
+                sortType:0,
+                styleStr:'font-size:30px;color:red',
+                styleObj:{
+                    fontSize:'40px',
+                    color:'green'
+                },
+                styleArr:[{
+                    fontSize:'40px',
+                    color:'blue',
+                },{
+                    backgroundColor:'gray'
+                }
+            ],
+                classStr:'normal',
+                classObj:{
+                    atguigu1:true,
+                    atguigu2:false
+                },
+                classArr:['atguigu1','atguigu2','atguigu3'],
+                message:'hello vue3！',
+                score:44,
+                count:0,
+                firstName:'A',
+                lastName:'B',
+                title:'',
+                question:'',
+                msg:'1',
+                person:{
+                    name:'tom',
+                    age:12,
+                    likes:['football','basketball']
+                }
+            }
+        },
+        methods:{
+            confirm(){
+                alert('提交注册用户信息:'+JSON.stringify(this.userInfo))
+            },
+            hint(event){
+                alert(event.key);
+            },
+            test1(){
+                alert('相应点击链接');
+            },
+            test2(){
+                alert("点击outer");
+            },
+            test3(){
+                alert("点击inner");
+            },
+            test4(){
+                alert("相应点击");
+            },
+            handlerClick1(event){
+              alert(event.target.innerHTML);
+            },
+            handlerClick2(msg,event){
+              alert(msg+"-"+event.target.innerHTML);
+            },
+            handlerClick3(msg,event){
+              alert(msg+"-"+event.target.innerHTML);
+            },
+            addFirst(newP){
+                this.persons.unshift(newP)
+            },
+            addLast(newP){
+                this.persons.push(newP)
+            },
+            deleteItem(index){
+                this.persons.splice(index,1);
+            },
+            updateItem(index,newP){
+                this.persons.splice(index,1,newP)
+            },
+            updateStyle1(){
+                this.styleStr='font-size:20px;color:blue'
+            },
+            updateStyle2(){
+                this.styleObj.fontSize='50px'
+                this.styleObj.color='blue'
+            },
+            updateStyle3(){
+                this.styleArr[0].color='red'
+            },
+            updataClass1(){
+                const arr=['happy','sad','normal']
+                const index=Math.floor(Math.random()*3)
+                this.classStr=arr[index]
+            },
+            updataClass2(){
+                 this.classObj.atguigu1=! this.classObj.atguigu1
+                 this.classObj.atguigu2=! this.classObj.atguigu2
+
+            },
+             updataClass3(){
+                this.classArr.pop()
+
+            },
+            updateCount(){
+                this.count+=1
+            },
+            reExam(){
+                this.score+=10
+            },
+            getResultText(){
+                 const result=this.score<60?'未通过':'通过';
+                 return result;
+            },
+            updateP(){
+                // this.person={
+                //     name:this.person.name+'--',
+                //     likes:[...this.person.likes,'atguigu']
+                // }
+                //如果只是更新person对象中的内部属性，比如name属性，那么watch的回调就不会执行。
+                //可以通过将deep配置为true来实现。也就是说，deep的默认值为false，因此之前watch监听不到内部数据的修改。
+                this.person.name+='--'
+            }
+        },
+        computed:{
+            filterPerson(){
+                //取出依赖数据
+                const {persons,keyword,sortType}=this
+                const arr=persons.filter((p)=>{
+                    return p.name.indexOf(keyword)!==-1
+                })
+                if(sortType!=0){
+                    arr.sort((p1,p2)=>{
+                        if(sortType===1){
+                            return p2.age-p1.age
+                        }
+                        else{
+                            return p1.age-p2.age
+                        }
+                    })
+                }
+                console.log(arr,persons)
+                return arr
+            },
+            //如果结果数据需要在页面中显示多次，那么计算属性函数只会执行1次，但method方法会对应执行多次
+            resultText(){
+                const result=this.score<60?'未通过':'通过';
+                return result;
+            },
+            //只读的
+            fullName(){
+                return this.firstName+"-"+this.lastName
+            },
+            fullNameSet:{
+                get(){
+                    return this.firstName+"-"+this.lastName
+                },
+                set(value){
+                    const name=value.split('-');
+                    console.log(name)
+                    if(name.length>1){
+                        this.firstName=name[0];
+                        this.lastName=name[1];
+                    }
+                   
+                }
+            }
+        }
+        //监听数据变化 watch回调默认是在数据发生变化时自动调用
+        ,watch:{
+            title(newVal,oldVal){
+                document.title=newVal
+                setTimeout(() => {
+                    const question=`${newVal}最匹配的问题？`;
+                    this.question=question
+                }, 1000);
+            },
+            'person.name':function(newVal,oldVal){
+                console.log(newVal)
+            },
+            person:{
+                handler(newVal,oldValue){
+                    setTimeout(() => {
+                       // alert("向后台提交"+JSON.stringify(newVal))
+                    }, 1000);
+                },
+                immediate:true,//标识立即执行：也就是在初始化时执行第一次
+                // deep:true
+            }
+        }
+    }).mount('#app')
+     setTimeout(()=>{
+        vm.count+=2
+     },2000)
+     setTimeout(()=>{
+        vm.updateCount()
+     },4000)
+ </script>
+    </body>
+</html>

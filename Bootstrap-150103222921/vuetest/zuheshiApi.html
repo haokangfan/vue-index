@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title></title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue/3.5.9/vue.global.js"></script>
+
+    </head>
+    <body>
+        <div id="app">
+            <p>count:{{count}}</p>
+            <p>double:{{double}}</p>
+            <p>ref:{{count}}</p>
+            <ul>
+                <li>msg:{{msg}}</li>
+                <li>person:{{person}}</li>
+                <li>courses:{{courses}}</li>
+            </ul>
+            <button @click="increase">increase</button>
+            <button @click="updateMsg">更新msg</button>
+        </div>
+
+    <script>
+        const {createApp,ref,computed,watch,reactive,toRefs}=Vue;
+        createApp({
+            setup(props,context){
+                const count=ref(0);
+                const increase=()=>{
+                    count.value++
+                };
+                const state=reactive({
+                    msg:'Hello Atguigu',
+                    person:{name:'Tom',age:22},
+                    courses:['Tom','BOM'],
+                })
+                const updateMsg=()=>{
+                    // state.msg+="--";
+                    state.person.sex='男'
+                }
+                const double=computed(()=>count.value*2);
+                watch(count,(newVal,oldVal)=>{
+                    console.log(newVal,oldVal)
+                });
+                return {
+                    count,
+                    increase,
+                    double,
+                    ...toRefs(state),
+                    updateMsg
+                }
+            }
+
+        }).mount('#app')
+    </script>
+    </body>
+</html>

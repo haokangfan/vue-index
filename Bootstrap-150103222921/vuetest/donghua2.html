@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title></title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="https://cdn.bootcdn.net/ajax/libs/vue/3.5.9/vue.global.js"></script>
+        <link href="https://cdn.bootcdn.net/ajax/libs/animate.css/4.1.1/animate.css" rel="stylesheet">
+       <style>
+        [v-cloak]{
+            display: none;
+        }
+       </style>
+    </head>
+    <body>
+        <div id="app" v-cloak>
+            <div >{{ msg}}</div>
+            <div v-memo="[count]">
+                <p>count:{{count}}</p>
+                <!-- 不会实时渲染 -->
+                <p>update:{{update}}</p>
+            </div>
+            <button @click="count++">count++</button>
+            <button @click="update++">update++</button>
+            <p v-pre>{{msg}}</p>
+            <p v-once>{{msg}}</p>
+            <p>{{msg}}</p>
+            <button @click="msg='aaa'">修改数据</button>
+            <span v-text="'<a href=http://www.baidu.com>aaaa</a>'"></span>
+            <span v-html="'<a href=http://www.baidu.com>aaaa</a>'"></span>
+            <button class="btn btn-pirmary" @click="addItem">add item</button>
+            <transition-group 
+            tag="ul" 
+            enter-active-class="animate__animated animate__bounceInRight"
+            leave-active-class="animate__animated animate__bounceOutRight"
+            >
+            <li v-for="(number,index) in numbers" 
+            @click="removeItem(index)" 
+            :key="number">
+                {{number}}
+            </li>
+                
+            </transition-group>
+        </div>
+        <script>
+            const {createApp} =Vue;
+            createApp({
+                data(){
+                    return { 
+                        msg:'hello',
+                        show:false,
+                        numbers:[1,2,3,4,5],
+                        count:18,
+                        update:22
+                    }
+                },
+                methods:{
+                    addItem(){
+                        const pos=Math.floor(Math.random()*this.numbers.length)
+                        this.numbers.splice(pos,0,this.numbers.length+1)
+                    },
+                    removeItem(index){
+                        this.numbers.splice(index,1)
+                    }
+                }
+
+            }).mount('#app')
+        </script>
+    </body>
+</html>

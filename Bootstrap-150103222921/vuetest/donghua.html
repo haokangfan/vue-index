@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title></title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="https://cdn.bootcdn.net/ajax/libs/vue/3.5.9/vue.global.js"></script>
+        <style>
+            .fade-enter-active,
+            .fade-leave-active{
+                transition: opacity 0.5s ease;
+            }
+            .fade-enter-from,
+            .fade-leave-to{
+                opacity: 0;
+            }
+            .slide-enter-active{
+                animation: slide-in 0.5s ease;
+            }
+            .slide-leave-active{
+                animation: slide-out 0.5s ease;
+            }
+            @keyframes slide-in {
+                0%{
+                    transform: translateX(100px);
+                }                
+                100%{
+                    transform:translateX(0);
+                }
+            }
+            @keyframes slide-out{
+                from{
+                    transform: translateX(0);
+                }
+                to{
+                    transform: translateX(100px);
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div id="app">
+            <button @click="show=!show">切换动画</button>
+            <transition name="fade" mode="">
+                <div v-if="show">hello vue3!</div>
+            </transition>
+              <transition name="slide" mode="">
+                <div v-if="show">hello vue3!</div>
+            </transition>
+        </div>
+        <script>
+            const {createApp} =Vue;
+            createApp({
+                data(){
+                    return { 
+                        show:false
+                    }
+                }
+            }).mount('#app')
+        </script>
+    </body>
+</html>
